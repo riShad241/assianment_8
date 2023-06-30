@@ -37,25 +37,46 @@ class _MyhomeState extends State<Myhome> {
             return ListTile(
               onLongPress: (){
                 showBottomSheet(context: context, builder: (context){
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Task Details', style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text('Title: ${Task[index].title}'),
-                      Text('Description: ${Task[index].description}'),
-                      Text('Days Required: ${Task[index].days}'),
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Task Details', style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text('Title: ${Task[index].title}'),
+                        Text('Description: ${Task[index].description}'),
+                        Text('Days Required: ${Task[index].days}'),
 
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(onPressed: (){
-                        Navigator.pop(context);
-                      }, child:const Text('Delete'))
-                    ],
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              ElevatedButton(onPressed: (){
+                                Navigator.pop(context);
+                              }, child: Text('OK')),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              ElevatedButton(onPressed: (){
+                                Task.removeAt(index);
+                                setState(() {
+                                  Navigator.pop(context);
+                                });
+                              }, child:const Text('Delete')),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   );
                 });
               },
@@ -66,52 +87,37 @@ class _MyhomeState extends State<Myhome> {
       floatingActionButton: FloatingActionButton(onPressed: (){
         showDialog(context: context, builder: (context){
           return AlertDialog(
-            title: Text('Add Task'),
-            content: Container(
-              height: 280,
-              width: 220,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: _TitleController,
-                      decoration: InputDecoration(
-                        label: Text('Title'),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Add Task'),
+                SizedBox(height: 20,),
+                TextFormField(
+                  controller: _TitleController,
+                  decoration: InputDecoration(
+                    label: Text('Title'),
+                    border: OutlineInputBorder(),
                   ),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: _DescriptionController,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 50),
-                          label: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Description'),
-                          ),
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
+                ),
+                SizedBox(height: 10,),
+                TextFormField(
+                  maxLines: 4,
+                  controller: _DescriptionController,
+                  decoration: InputDecoration(
+                    label: Text('Description'),
+                    border: OutlineInputBorder(),
                   ),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: _DaysController,
-                        decoration: InputDecoration(
-                          label: Text('Days Required'),
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
+                ),
+                SizedBox(height: 10,),
+                TextFormField(
+                  controller: _DaysController,
+                  decoration: InputDecoration(
+                    label: Text('Days Required'),
+                    border: OutlineInputBorder(),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
 
             actions: [
@@ -123,6 +129,9 @@ class _MyhomeState extends State<Myhome> {
                   Task.add(AddTask(_TitleController.text, _DescriptionController.text,
                       _DaysController.text));
                 }
+                _TitleController.clear();
+                _DescriptionController.clear();
+                _DaysController.clear();
                 if(mounted){
                   setState(() {
 
